@@ -1,0 +1,29 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "start",
+			"problemMatcher": [],
+			"label": "npm: start",
+			"detail": "node dist/app.js"
+		},
+		{
+			"type": "npm",
+			"script": "watch-ts",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "npm: watch-ts",
+			"detail": "tsc -w"
+		},
+		{
+			"type": "npm",
+			"script": "watch-node",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "npm: watch-node",
+			"detail": "nodemon dist/app.js"
+		},
+
+	]
+}
