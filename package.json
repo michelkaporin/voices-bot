@@ -16,7 +16,6 @@
     "lodash": "^4.17.20",
     "node-telegram-bot-api": "^0.50.0"
   },
-  "type": "module",
   "devDependencies": {
     "@types/lodash": "^4.14.162",
     "tslint": "^6.1.3",
