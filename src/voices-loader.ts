@@ -1,5 +1,5 @@
 import { LocalVoiceMap, TelegramVoiceMap } from "./types";
-import fs from 'fs';
+import { promises as fsPromises, createReadStream } from 'fs';
 import { isEqual } from "lodash";
 import { BotWrapper } from "./bot";
 import { TelegramVoices } from "./telegram-voices";
@@ -14,11 +14,11 @@ export class VoicesLoader {
     }
 
     async load(): Promise<TelegramVoiceMap> {
-        const localVoicesFile = fs.readFileSync(this.localVoicesFilepath, 'utf-8');
-        const files: LocalVoiceMap = JSON.parse(localVoicesFile);
+        const localVoicesFile = fsPromises.readFile(this.localVoicesFilepath, { encoding: 'utf-8' });
+        const files: LocalVoiceMap = JSON.parse(await localVoicesFile);
 
-        const voiceMap = this.telegramVoices.get();
-        const latestVoiceMap = this.telegramVoices.get();
+        const voiceMap = await this.telegramVoices.get();
+        const latestVoiceMap = await this.telegramVoices.get();
 
         await this.uploadNewVoices(files, voiceMap, latestVoiceMap);
 
@@ -33,7 +33,7 @@ export class VoicesLoader {
 
             // Upload if voice doesn't exist
             if (!voice) {
-                const data = fs.createReadStream(file.path);
+                const data = createReadStream(file.path);
                 const msg = await this.bot.sendVoice(this.myChatId, data); // send to my chat id
 
                 if (!msg.voice) {
