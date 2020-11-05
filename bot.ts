@@ -1,5 +1,6 @@
 import TelegramBot, { InlineQueryResultCachedVoice } from "node-telegram-bot-api";
 import { TelegramVoiceMap } from "./types";
+import * as stream from "stream";
 
 export class BotWrapper {
 
@@ -10,14 +11,15 @@ export class BotWrapper {
         this.token = process.env.TELEGRAM_BOT_TOKEN as string;
     }
 
-    init(): TelegramBot {
+    init(): BotWrapper {
         // Create a bot that uses 'polling' to fetch new updates
         this.bot = new TelegramBot(this.token, { polling: true });
-        return this.bot;
+        return this;
     }
 
     async bind(voiceMap: Promise<TelegramVoiceMap>) {
         const map = await voiceMap;
+
         this.bot?.on('inline_query', async query => {
             const inlineMsg = query.query.toLowerCase();
             let results = map.voices;
@@ -39,5 +41,13 @@ export class BotWrapper {
 
             this.bot?.answerInlineQuery(query.id, voices);
         });
+    }
+
+    sendVoice(chatId: number, data: string | stream.Stream | Buffer): Promise<TelegramBot.Message> {
+        if (!this.bot) {
+            throw Error('Bot was not initialised');
+        }
+
+        return this.bot.sendVoice(chatId, data)
     }
 }

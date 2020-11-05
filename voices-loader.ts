@@ -1,16 +1,16 @@
 import { LocalVoiceMap, TelegramVoiceMap } from "./types";
 import fs from 'fs';
-import TelegramBot from "node-telegram-bot-api";
 import { isEqual } from "lodash";
+import { BotWrapper } from "./bot";
 
 export class VoicesLoader {
     private readonly localVoicesFilepath = './assets/local_voice_map.json';
     private readonly voiceMapFilepath = './assets/telegram_voice_map.json';
     private readonly myChatId = 459393176;
 
-    private bot: TelegramBot;
+    private bot: BotWrapper;
 
-    constructor(bot: TelegramBot) {
+    constructor(bot: BotWrapper) {
         this.bot = bot;
     }
 
@@ -24,7 +24,7 @@ export class VoicesLoader {
 
         await this.uploadNewVoices(files, voiceMap, latestVoiceMap);
 
-        this.sortVoices(latestVoiceMap);
+        latestVoiceMap.voices = this.sortVoices(latestVoiceMap);
 
         return latestVoiceMap;
     }
@@ -57,7 +57,7 @@ export class VoicesLoader {
     }
 
     private sortVoices(latestVoiceMap: TelegramVoiceMap) {
-        latestVoiceMap.voices = latestVoiceMap.voices.sort((a, b) => {
+        return latestVoiceMap.voices.sort((a, b) => {
             if (a.title > b.title) {
                 return 1;
             } else if (a.title < b.title) {

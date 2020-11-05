@@ -4,10 +4,9 @@ import { VoicesLoader } from './voices-loader';
 
 dotenv.config();
 
-// Create a bot that uses 'polling' to fetch new updates
-const botWrapper = new BotWrapper();
-const bot = botWrapper.init();
+const bot = new BotWrapper();
+bot.init();
 const loader = new VoicesLoader(bot);
 const voiceMap = loader.load();
 
-botWrapper.bind(voiceMap);
+bot.bind(voiceMap);
