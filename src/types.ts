@@ -1,3 +1,8 @@
+export interface Config {
+    botChatId: number;
+    admins: string[];
+}
+
 export interface LocalVoiceMap {
     voices: {
         id: string;

@@ -1,14 +1,13 @@
 import TelegramBot, { InlineQueryResultCachedVoice } from "node-telegram-bot-api";
-import { TelegramVoiceMap, VoiceMessageSaveState } from "./types";
+import { Config, TelegramVoiceMap, VoiceMessageSaveState } from "./types";
 import * as stream from "stream";
 import { TelegramVoices } from "./telegram-voices";
+import { BotConfig } from "./config";
 
 export class BotWrapper {
 
     private bot?: TelegramBot;
     private readonly token: string;
-
-    private adminUsernames?: string[];
 
     // <username, VoiceMessageSaveState> map
     private addedVoiceMap: Map<string, VoiceMessageSaveState> = new Map();
@@ -16,14 +15,27 @@ export class BotWrapper {
     // <username, telegram_file_id>
     private lastAddedVoiceMap: Map<string, string> = new Map();
 
-    constructor(private telegramVoices: TelegramVoices) {
+    private config?: Config;
+
+    constructor(
+        private botConfig: BotConfig,
+        private telegramVoices: TelegramVoices) {
         this.token = process.env.TELEGRAM_BOT_TOKEN as string;
     }
 
     init(): BotWrapper {
         // Create a bot that uses 'polling' to fetch new updates
         this.bot = new TelegramBot(this.token, { polling: true });
+
         return this;
+    }
+
+    async getConfig(): Promise<Config> {
+        if (!this.config) {
+            this.config = await this.botConfig.fetch();
+        }
+
+        return this.config;
     }
 
     sendVoice(chatId: number, data: string | stream.Stream | Buffer): Promise<TelegramBot.Message> {
@@ -147,12 +159,14 @@ export class BotWrapper {
         });
     }
 
-    private isAdmin(username: string) {
-        if (!this.adminUsernames) {
-            this.adminUsernames = ['michelkaporin', 'artsheff'];
+    private async isAdmin(username: string) {
+        if (!this.config) {
+            throw new Error('The config has not been initialised');
         }
 
-        if (this.adminUsernames.findIndex(u => u === username) > -1) {
+        const admins = this.config.admins;
+
+        if (admins.findIndex(u => u === username) > -1) {
             return true;
         }
 

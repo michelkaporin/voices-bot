@@ -6,7 +6,6 @@ import { TelegramVoices } from "./telegram-voices";
 
 export class VoicesLoader {
     private readonly localVoicesFilepath = './assets/local_voice_map.json';
-    private readonly myChatId = 459393176;
 
     constructor(
         private bot: BotWrapper,
@@ -28,13 +27,15 @@ export class VoicesLoader {
     }
 
     private async uploadNewVoices(files: LocalVoiceMap, voiceMap: TelegramVoiceMap, newVoiceMap: TelegramVoiceMap) {
+        const myChatId = (await this.bot.getConfig()).botChatId;
+
         for (const file of files.voices) {
             const voice = voiceMap.voices.find(v => v.id === file.id);
 
             // Upload if voice doesn't exist
             if (!voice) {
                 const data = createReadStream(file.path);
-                const msg = await this.bot.sendVoice(this.myChatId, data); // send to my chat id
+                const msg = await this.bot.sendVoice(myChatId, data); // send to my chat id
 
                 if (!msg.voice) {
                     throw Error("Did not get an expected file_id from Telegram");
