@@ -13,3 +13,9 @@ export interface TelegramVoiceMap {
         file_id: string;
     }[];
 }
+
+export enum VoiceMessageSaveState {
+    VoiceWait = 0,
+    VoiceReceived = 1,
+    TextReceived = 2,
+}

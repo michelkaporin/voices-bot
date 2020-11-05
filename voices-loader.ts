@@ -2,25 +2,23 @@ import { LocalVoiceMap, TelegramVoiceMap } from "./types";
 import fs from 'fs';
 import { isEqual } from "lodash";
 import { BotWrapper } from "./bot";
+import { TelegramVoices } from "./telegram-voices";
 
 export class VoicesLoader {
     private readonly localVoicesFilepath = './assets/local_voice_map.json';
-    private readonly voiceMapFilepath = './assets/telegram_voice_map.json';
     private readonly myChatId = 459393176;
 
-    private bot: BotWrapper;
-
-    constructor(bot: BotWrapper) {
-        this.bot = bot;
+    constructor(
+        private bot: BotWrapper,
+        private telegramVoices: TelegramVoices) {
     }
 
     async load(): Promise<TelegramVoiceMap> {
         const localVoicesFile = fs.readFileSync(this.localVoicesFilepath, 'utf-8');
         const files: LocalVoiceMap = JSON.parse(localVoicesFile);
 
-        const voiceMapFile = fs.readFileSync(this.voiceMapFilepath, 'utf-8');
-        const voiceMap: TelegramVoiceMap = JSON.parse(voiceMapFile);
-        const latestVoiceMap: TelegramVoiceMap = JSON.parse(voiceMapFile);
+        const voiceMap = this.telegramVoices.get();
+        const latestVoiceMap = this.telegramVoices.get();
 
         await this.uploadNewVoices(files, voiceMap, latestVoiceMap);
 
@@ -52,7 +50,7 @@ export class VoicesLoader {
 
         // Persist new voice map
         if (!isEqual(voiceMap, newVoiceMap)) {
-            fs.writeFileSync(this.voiceMapFilepath, JSON.stringify(newVoiceMap), { encoding: 'utf-8' });
+            this.telegramVoices.write(newVoiceMap);
         }
     }
 
