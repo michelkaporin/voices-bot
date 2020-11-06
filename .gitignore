@@ -116,7 +116,7 @@ dist
 .pnp.*
 
 # Assets
-assets/
+/assets
 
 # Mac OS specifics
 **/.DS_Store

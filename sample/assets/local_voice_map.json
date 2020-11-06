@@ -1,0 +1,11 @@
+{
+    "voices": [{
+        "id": "voice1",
+        "title": "Hi!",
+        "path": "./assets/voices/hi.ogg"
+    },{
+        "id": "voice2",
+        "title": "How are you?",
+        "path": "./assets/voices/how_are_you.ogg"
+    }]
+}
