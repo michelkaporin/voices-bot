@@ -117,3 +117,6 @@ dist
 
 # Assets
 assets/
+
+# Mac OS specifics
+**/.DS_Store
