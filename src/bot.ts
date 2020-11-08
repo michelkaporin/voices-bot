@@ -159,7 +159,6 @@ export class BotWrapper {
             }) as InlineQueryResultCachedVoice);
 
             this.bot?.answerInlineQuery(query.id, voices, {
-                cache_time: 0,
                 next_offset: nextOffset?.toString(),
             });
         });
