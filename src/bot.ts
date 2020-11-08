@@ -144,8 +144,11 @@ export class BotWrapper {
                 results = map.voices.filter(v => v.title.toLowerCase().includes(inlineMsg));
             }
 
+            let nextOffset;
             if (results.length > 50) {
-                results = results.slice(0, 49);
+                const offset = query.offset ? +query.offset : 0;
+                nextOffset = offset + 49;
+                results = results.slice(offset, nextOffset);
             }
 
             const voices = results.map(v => ({
@@ -155,7 +158,10 @@ export class BotWrapper {
                 type: 'voice'
             }) as InlineQueryResultCachedVoice);
 
-            this.bot?.answerInlineQuery(query.id, voices);
+            this.bot?.answerInlineQuery(query.id, voices, {
+                cache_time: 0,
+                next_offset: nextOffset?.toString(),
+            });
         });
     }
 
