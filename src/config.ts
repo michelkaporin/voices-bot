@@ -1,8 +1,9 @@
 import { promises as fsPromises } from 'fs';
+import path from 'path';
 import { Config } from './types';
 
 export class BotConfig {
-    private readonly configFilepath = './assets/config.json';
+    private readonly configFilepath = path.resolve('./assets/config.json');
 
     private config?: Config;
 

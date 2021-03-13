@@ -1,8 +1,9 @@
 import { promises as fsPromises } from 'fs';
+import path from 'path';
 import { TelegramVoiceMap } from './types';
 
 export class TelegramVoices {
-    private readonly voiceMapFilepath = './assets/telegram_voice_map.json';
+    private readonly voiceMapFilepath = path.resolve('./assets/telegram_voice_map.json');
 
     private voiceMap?: TelegramVoiceMap;
 

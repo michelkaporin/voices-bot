@@ -3,9 +3,10 @@ import { promises as fsPromises, createReadStream } from 'fs';
 import { isEqual } from "lodash";
 import { BotWrapper } from "./bot";
 import { TelegramVoices } from "./telegram-voices";
+import path from "path";
 
 export class VoicesLoader {
-    private readonly localVoicesFilepath = './assets/local_voice_map.json';
+    private readonly localVoicesFilepath = path.resolve('./assets/local_voice_map.json');
 
     constructor(
         private bot: BotWrapper,
