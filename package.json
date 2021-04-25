@@ -13,7 +13,7 @@
   "dependencies": {
     "@types/node-telegram-bot-api": "^0.50.4",
     "dotenv": "^8.2.0",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "node-telegram-bot-api": "^0.50.0"
   },
   "devDependencies": {
