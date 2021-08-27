@@ -112,6 +112,7 @@ export class BotWrapper {
         id: msg.message_id.toString(),
         file_id: voiceFileId,
         title: msg.text,
+        selectedTimes: 0,
       };
 
       this.telegramVoices.add(newVoice);
