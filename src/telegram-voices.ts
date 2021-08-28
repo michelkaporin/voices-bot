@@ -53,6 +53,8 @@ export class TelegramVoices {
   }
 
   increaseSelectedCount(userId: number, voiceId: string) {
+    if (!this.userVoiceMap[userId]) return;
+
     const index = this.userVoiceMap[userId].voices.findIndex(
       (v) => v.id == voiceId
     );
