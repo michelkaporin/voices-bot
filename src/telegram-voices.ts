@@ -12,7 +12,7 @@ export class TelegramVoices {
   );
 
   private masterVoiceMap?: TelegramVoiceMap;
-  private userVoiceMap: UserToTelegramVoiceMap = {};
+  private userVoiceMap: UserToTelegramVoiceMap = {}; // user's custom voice map with own order of appearance
 
   async get(userId: number | undefined = undefined): Promise<TelegramVoiceMap> {
     if (!userId && this.masterVoiceMap) {
@@ -53,15 +53,20 @@ export class TelegramVoices {
   }
 
   increaseSelectedCount(userId: number, voiceId: string) {
-    const voice = this.userVoiceMap[userId].voices.find((v) => v.id == voiceId);
-    if (voice) {
-      voice.selectedTimes++;
+    const index = this.userVoiceMap[userId].voices.findIndex(
+      (v) => v.id == voiceId
+    );
+    if (index > -1) {
+      const voice = this.userVoiceMap[userId].voices[index];
+      voice.selectedTimes = voice.selectedTimes ? voice.selectedTimes++ : 1;
     }
 
     this.userVoiceMap[userId].voices = this.userVoiceMap[userId].voices.sort(
       (v1, v2) => {
-        if (v1.selectedTimes > v2.selectedTimes) return 1;
-        else if (v1.selectedTimes < v2.selectedTimes) return -1;
+        v1.selectedTimes = v1.selectedTimes ?? 0;
+        v2.selectedTimes = v2.selectedTimes ?? 0;
+        if (v1.selectedTimes < v2.selectedTimes) return 1;
+        else if (v1.selectedTimes > v2.selectedTimes) return -1;
         return 0;
       }
     );

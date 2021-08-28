@@ -67,6 +67,8 @@ export class BotWrapper {
     this.bindAddVoiceCommand();
     this.bindVoiceWaitState();
     this.bindVoiceReceivedState();
+
+    this.bindPollingError();
   }
 
   private bindVoiceReceivedState() {
@@ -112,7 +114,6 @@ export class BotWrapper {
         id: msg.message_id.toString(),
         file_id: voiceFileId,
         title: msg.text,
-        selectedTimes: 0,
       };
 
       this.telegramVoices.add(newVoice);
@@ -210,12 +211,20 @@ export class BotWrapper {
   }
 
   private bindInlineQueryResult() {
-    this.bot?.on("chosen_inline_result", async (selected) => {
+    this.bot?.on("chosen_inline_result", (selected) => {
+      if (!selected.from.id || !selected.result_id) {
+        return;
+      }
+
       this.telegramVoices.increaseSelectedCount(
         selected.from.id,
         selected.result_id
       );
     });
+  }
+
+  private bindPollingError() {
+    this.bot?.on("polling_error", (err) => console.error(err));
   }
 
   private async isAdmin(username: string) {

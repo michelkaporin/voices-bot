@@ -15,7 +15,7 @@ export interface VoiceMessage {
   id: string;
   title: string;
   file_id: string;
-  selectedTimes: number;
+  selectedTimes?: number;
 }
 
 export interface TelegramVoiceMap {

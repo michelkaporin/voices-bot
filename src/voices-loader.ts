@@ -54,7 +54,6 @@ export class VoicesLoader {
           id: file.id,
           file_id: msg.voice.file_id,
           title: file.title,
-          selectedTimes: 0,
         };
 
         newVoiceMap.voices.push(voiceMsg);
