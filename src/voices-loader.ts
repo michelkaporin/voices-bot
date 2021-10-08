@@ -57,7 +57,7 @@ export class VoicesLoader {
         };
 
         newVoiceMap.voices.push(voiceMsg);
-        this.telegramVoices.add(voiceMsg);
+        await this.telegramVoices.add(voiceMsg);
       }
     }
   }

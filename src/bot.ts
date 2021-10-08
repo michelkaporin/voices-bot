@@ -116,7 +116,7 @@ export class BotWrapper {
         title: msg.text,
       };
 
-      this.telegramVoices.add(newVoice);
+      await this.telegramVoices.add(newVoice);
 
       // tidy up the state
       this.addedVoiceMap.delete(username);

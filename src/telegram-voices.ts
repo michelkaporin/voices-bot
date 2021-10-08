@@ -10,6 +10,9 @@ export class TelegramVoices {
   private readonly voiceMapFilepath = path.resolve(
     "./assets/telegram_voice_map.json"
   );
+  private readonly voiceMapBackupFilepath = path.resolve(
+    "./assets/telegram_voice_map.json.bak"
+  );
 
   private masterVoiceMap?: TelegramVoiceMap;
   private userVoiceMap: UserToTelegramVoiceMap = {}; // user's custom voice map with own order of appearance
@@ -36,10 +39,17 @@ export class TelegramVoices {
     return this.masterVoiceMap;
   }
 
-  add(newVoice: VoiceMessage) {
+  async add(newVoice: VoiceMessage) {
     this.masterVoiceMap?.voices.push(newVoice);
 
-    fsPromises.writeFile(
+    // Backup
+    await fsPromises.copyFile(
+      this.voiceMapFilepath,
+      this.voiceMapBackupFilepath
+    );
+
+    // Write new
+    await fsPromises.writeFile(
       this.voiceMapFilepath,
       JSON.stringify(this.masterVoiceMap),
       {
