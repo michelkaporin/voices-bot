@@ -40,13 +40,13 @@ export class TelegramVoices {
   }
 
   async add(newVoice: VoiceMessage) {
-    this.masterVoiceMap?.voices.push(newVoice);
-
     // Backup
     await fsPromises.copyFile(
       this.voiceMapFilepath,
       this.voiceMapBackupFilepath
     );
+
+    this.masterVoiceMap?.voices.push(newVoice);
 
     // Write new
     await fsPromises.writeFile(
@@ -57,8 +57,8 @@ export class TelegramVoices {
       }
     );
 
-    for (const user in Object.keys(this.userVoiceMap)) {
-      this.userVoiceMap[user].voices.push(newVoice);
+    for (const user of Object.keys(this.userVoiceMap)) {
+      this.userVoiceMap[+user].voices.push(newVoice);
     }
   }
 
