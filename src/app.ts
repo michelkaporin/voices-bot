@@ -3,15 +3,25 @@ import { BotWrapper } from './bot';
 import { BotConfig } from './config';
 import { TelegramVoices } from './telegram-voices';
 import { VoicesLoader } from './voices-loader';
+import * as fs from 'fs';
 
 dotenv.config();
 
-const config = new BotConfig();
+function handleError(err: any) {
+    fs.appendFileSync('voices-bot.log', `${new Date()}: ${err}`);
+}
 
-const telegramVoices = new TelegramVoices();
-const bot = new BotWrapper(config, telegramVoices);
-bot.init();
+try {
+    const config = new BotConfig();
 
-const loader = new VoicesLoader(bot, telegramVoices);
-// file deepcode ignore PromiseNotCaughtGeneral: there’s no way to recover from an error
-loader.load().then(_ => bot.bind());
+    const telegramVoices = new TelegramVoices();
+    const bot = new BotWrapper(config, telegramVoices);
+    bot.init();
+
+    const loader = new VoicesLoader(bot, telegramVoices);
+    loader.load().then(_ => bot.bind()).catch(err => {
+        handleError(err);
+    });
+} catch (err) {
+    handleError(err);
+}
