@@ -11,7 +11,7 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "@types/node-telegram-bot-api": "^0.50.4",
+    "@types/node-telegram-bot-api": "^0.51.1",
     "dotenv": "^8.2.0",
     "lodash": "^4.17.21",
     "node-telegram-bot-api": "^0.54.0"
