@@ -12,7 +12,7 @@
   "private": false,
   "dependencies": {
     "@types/node-telegram-bot-api": "^0.50.4",
-    "dotenv": "^8.2.0",
+    "dotenv": "^8.6.0",
     "lodash": "^4.17.21",
     "node-telegram-bot-api": "^0.54.0"
   },
